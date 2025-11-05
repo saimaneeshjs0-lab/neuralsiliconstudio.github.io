@@ -1,19 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuralSilicon Studio</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
-    h1 { color: #0f62fe; }
-    p { color: #333; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralSilicon Studio - AI Meets Silicon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        /* Navigation Menu */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            border-bottom: 1px solid #00ff88;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 60px;
+        }
+        nav .logo {
+            font-family: 'Orbitron', monospace;
+            color: #00ff88;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav li {
+            margin: 0 20px;
+        }
+        nav a {
+            color: #00ff88;
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            padding: 15px 0;
+            display: block;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #00ff88;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        /* Mobile Menu */
+        @media (max-width: 768px) {
+            nav ul {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: left 0.3s ease;
+            }
+            nav ul.active {
+                left: 0;
+            }
+            nav li {
+                margin: 20px 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+        }
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(45deg, #000000, #1a1a1a);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px; /* Space for fixed nav */
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circuit" patternUnits="userSpaceOnUse" width="20" height="20"><path d="M0 10h10v1H0zM10 0v10h1V0z" fill="%2300ff88"/></pattern></defs><rect width="100" height="100" fill="url(%23circuit)"/></svg>');
+            opacity: 0.1;
+            animation: move 20s linear infinite;
+        }
+        @keyframes move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-20px); }
+        }
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #00ff88; }
+            to { text-shadow: 0 0 30px #00ff88, 0 0 40px #00ff88; }
+        }
+        .hero p {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-top: 20px;
+        }
+        /* Sections */
+        .section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section h2 {
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+        }
+        /* Cards with Animations */
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .card:hover::before {
+            left: 100%;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+        .card i {
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        /* Portfolio */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .portfolio-item {
+            background: #1a1a1a;
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .portfolio-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff88;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .portfolio-item:hover .overlay {
+            transform: translateY(0);
+        }
+        /* Contact */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .contact-item {
+            background: #1a1a1a;
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            flex: 1 1 200px;
+            max-width: 300px;
+        }
+        .contact-item i {
+            font-size: 2rem;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        .interactive-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .interactive-form input, .interactive-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #00ff88;
+            color: #e0e0e0;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        .interactive-form input:focus, .interactive-form textarea:focus {
+            border-color: #00cc77;
+            outline: none;
+        }
+        .btn {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #00cc77;
+            transform: scale(1.1);
+        }
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 20px;
+            text-align: center;
+            color: #00ff88;
+        }
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero {
+                height: 80vh;
+            }
+            .section {
+                padding: 50px 20px;
+            }
+            .services-grid, .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        @media (max-width: 480px) {
+            nav .logo {
+                font-size: 1.2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .section h2 {
+                font-size: 2rem;
+            }
+            .card {
+                padding: 20px;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>NeuralSilicon Studio</h1>
-  <p>Where AI meets Silicon.</p>
-  <p>FPGA · VLSI · AI Hardware Acceleration</p>
-  <p>Contact: <a href="mailto:neuralsiliconstudio@gmail.com">neuralsiliconstudio@gmail.com</a></p>
-</body>
-</html>
+    <!-- Navigation Menu -->
+    <nav>
+        <div class="logo">NeuralSilicon</div>
+        <ul id="nav-menu">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div>
+            <h1>NeuralSilicon Studio</h1>
+            <p>AI Meets Silicon | Innovating VLSI & AI Hardware</p>
+            <button class="btn" onclick="scrollToSection('about')">Explore Our Work</button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2>About Us</h2>
+        <div class="card">
+            <p>NeuralSilicon Studio is a deep-tech engineering company founded by Maneesh Kumar, merging artificial intelligence with custom silicon hardware. We specialize in FPGA design, VLSI development, and AI hardware acceleration, transforming complex algorithms into high-performance, low-power solutions for defence, edge computing, and next-gen tech.</p>
+            <p>Our vision: A future where AI runs at silicon speed, enabling smarter, faster, energy-efficient systems.</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="card text-center">
+                <i class="fas fa-microchip"></i>
+                <h5>FPGA & RTL Design</h5>
+                <p>Optimized FPGA and RTL architectures for performance, efficiency, and power.</p>
+            </div>
+            <div class="card text-center">
+                <i class="fas fa-brain"></i>
+                <h5>AI Hardware Acceleration</h5>
+                <p>Dedicated FPGA/ASIC for real-time AI inference on edge devices.</p>
+            </div>
+            <div class="card text-center">
+                <i class="fas fa-cogs"></i>
+                <h5>Custom IP Cores</h5>
+                <p>Reusable IP for DSP, math, and AI applications, scalable and high-speed.</p>
+            </div>
+            <div class="card text-center">
+                <i class="fas fa-users"></i>
+                <h5>Research & Collaboration</h5>
+                <p>Partnering with institutes and startups for advanced hardware solutions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="section">
+        <h2>Portfolio</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <img src="https://via.placeholder.com/400x200/00ff88/000000?text=RTL+Median+Filter" alt="RTL Median Filter">
+                <div class="overlay">
+                    <h5>RTL Based Median Filter for CNN Application</h5>
+                    <p>Hardware-accelerated median filter in RTL for noise reduction in CNN preprocessing. Optimized for FPGA, enhancing image quality and reducing latency in AI pipelines.</p>
+                    <a href="#" style="color: #00ff88;">View on GitHub</a>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://via.placeholder.com/400x200/00ff88/000000?text=RTL+Cordic" alt="RTL Cordic Algorithm">
+                <div class="overlay">
+                    <h5>RTL Based Cordic Algorithm</h5>
+                    <p>Efficient CORDIC implementation in RTL for trigonometric and hyperbolic computations. Ideal for DSP and AI hardware, enabling fast, resource-efficient operations on ASIC/FPGA.</p>
+                    <a href="#" style="color: #00ff88;">View Repo</a>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://via.placeholder.com/400x200/00ff88/000000?text=MIPS+Processor" alt="MIPS Processor">
+                <div class="overlay">
+                    <h5>MIPS Processor</h5>
+                    <p>Custom MIPS-based processor design in VLSI for embedded systems. Features pipelined architecture, ALU, and memory interfaces, optimized for low-power AI and computing tasks.</p>
+                    <a href="#" style="color: #00ff88;">Read Documentation</a>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://via.placeholder.com/400x200/00ff88/000000?text=Animal+Vehicle+Detection" alt="Animal Vehicle Detection">
+                <div class="overlay">
+                    <h5>Animal & Vehicle Detection ML Models</h5>
+                    <p>Machine learning models using CNNs for real-time detection on FPGA. Deployed for surveillance and autonomous systems, with hardware acceleration for efficient edge inference.</p>
+                    <a href="#" style="color: #00ff88;">View Demo</a>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://via.placeholder.com/400x200/00ff88/000000?text=Weed+Detection" alt="Weed Detection">
+                <div class="overlay">
+                    <h5>Weed Detection (Waste Crop in Farmland)</h5>
+                    <p>AI-based model for detecting weeds in farmland using image processing and ML. Integrated on custom hardware for automated targeting and removal in agricultural settings.</p>
+                    <a href="#" style="color: #00ff88;">Watch Video</a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://github.com/yourusername" class="btn">View All Projects on GitHub</a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <h5>Email</h5>
+                <p><a href="mailto:neuralsiliconstudio@gmail.com" style="color: #00ff88;">neuralsiliconstudio@gmail.com</a></p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <h5>Location</h5>
+                <p>Telangana, Hyderabad</p>
+            </div>
+        </div>
+        <div class="interactive-form">
+            <form action="mailto:neuralsiliconstudio@gmail.com" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn">Send Message
